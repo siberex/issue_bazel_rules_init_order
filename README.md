@@ -1,64 +1,25 @@
-![Bazel at Scalio](https://raw.githubusercontent.com/scalio/bazel-status/master/assets/scalio-bn.svg?sanitize=true)
+## Issue description
 
-<h1 align="center">Bazel Nest Starter</h1>
-
-<p align="center">
-  A starter app written in Typescript for <a href="https://nestjs.com/">NestJS</a> -- built <b>using <a href="https://bazel.build/">Bazel</a></b>
-</p>
-
-&nbsp;
-## Overview
-
-This project was created by invoking the default Nest app scaffold via the Nest CLI, and then the addition of simple `BUILD.bazel` and `WORKSPACE` files, making use of [rules_nodejs](https://github.com/bazelbuild/rules_nodejs/#quickstart).
-
-To create this from scratch in a new project, run the following:
-
-```bash
-nest new AppName
-yarn create @bazel APP_NAME --packageManager=yarn --typescript
-```
-
-and now add the files `WORKSPACE` and `src/BUILD.bazel` to your new directory root and `src` folders, respectively.
-
-## Build and run
-
-With Bazel installed:
-
-```bash
-bazel run //src:server
-```
-
-Without Bazel installed:
-
-```bash
-yarn install -D
-yarn bazel:run
-```
-
-## Docker
-
-Build Docker image:
+If `rules_proto` init is placed before `rules_docker` in WORKSPACE file, there will be error on docker build: 
 
 ```bash
 bazel build --platforms=@build_bazel_rules_nodejs//toolchains/node:linux_amd64 //src:docker
+
+Starting local Bazel server and connecting to it...
+ERROR: /private/var/tmp/_bazel_sib/7e0a4dda28e20d87e5bba3cee1c0c969/external/io_bazel_rules_go/go/tools/coverdata/BUILD.bazel:3:1: in go_tool_library rule @io_bazel_rules_go//go/tools/coverdata:coverdata:
+Traceback (most recent call last):
+	File "/private/var/tmp/_bazel_sib/7e0a4dda28e20d87e5bba3cee1c0c969/external/io_bazel_rules_go/go/tools/coverdata/BUILD.bazel", line 3
+		go_tool_library(name = 'coverdata')
+	File "/private/var/tmp/_bazel_sib/7e0a4dda28e20d87e5bba3cee1c0c969/external/io_bazel_rules_go/go/private/rules/library.bzl", line 42, in _go_library_impl
+		go.archive(go, source)
+	File "/private/var/tmp/_bazel_sib/7e0a4dda28e20d87e5bba3cee1c0c969/external/io_bazel_rules_go/go/private/actions/archive.bzl", line 219, in go.archive
+		sets.union(cgo_exports, *[a.cgo_exports for a...])
+	File "/private/var/tmp/_bazel_sib/7e0a4dda28e20d87e5bba3cee1c0c969/external/bazel_skylib/lib/new_sets.bzl", line 184, in sets.union
+		struct(_values = dicts.add(*[s._values ...]))
+	File "/private/var/tmp/_bazel_sib/7e0a4dda28e20d87e5bba3cee1c0c969/external/bazel_skylib/lib/new_sets.bzl", line 184, in struct
+		dicts.add(*[s._values for s in args])
+	File "/private/var/tmp/_bazel_sib/7e0a4dda28e20d87e5bba3cee1c0c969/external/bazel_skylib/lib/new_sets.bzl", line 184, in dicts.add
+		s._values
+object of type 'list' has no field '_values'
+ERROR: Analysis of target '//src:docker' failed; build aborted: Analysis of target '@io_bazel_rules_go//go/tools/coverdata:coverdata' failed; build aborted
 ```
-
-Push image to the registry (currently set to `gcr.io`):
-
-```bash
-bazel run --define push_tag=${IMAGE_TAG} --define push_repository=${REPOSITORY} //src:push_container
-```
-
-## Credits
-
-Created by [@siberex](https://github.com/siberex/) @ [Scalio](https://scal.io/)
-
-
-## About us
-<p align="center">
-    <br/>
-    <a href="https://scal.io/">
-        <img src="https://raw.githubusercontent.com/scalio/bazel-status/master/assets/scalio-logo.svg?sanitize=true" />
-    </a>
-    <br/>
-</p>
